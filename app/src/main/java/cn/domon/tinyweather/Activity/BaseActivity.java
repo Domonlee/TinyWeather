@@ -1,8 +1,10 @@
-package cn.domon.tinyweather;
+package cn.domon.tinyweather.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+
+import cn.domon.tinyweather.MyApplication;
 
 /**
  * Created by Domon on 16-5-5.

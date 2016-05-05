@@ -1,4 +1,4 @@
-package cn.domon.tinyweather;
+package cn.domon.tinyweather.Activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,10 +10,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.socks.library.KLog;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.domon.tinyweather.Constant;
+import cn.domon.tinyweather.R;
+import cn.domon.tinyweather.VolleyRequestManager;
 
 public class MainActivity extends BaseActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -35,7 +39,8 @@ public class MainActivity extends BaseActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e(TAG, response);
+                        KLog.json(TAG, response);
+                        KLog.e(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
