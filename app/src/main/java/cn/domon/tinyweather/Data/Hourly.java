@@ -1,56 +1,38 @@
 package cn.domon.tinyweather.Data;
 
 /**
- * Created by Domon on 16-5-5.
+ * Created by Domon on 16-5-10.
  */
-public class NowData {
-
+public class Hourly {
     /**
-     * code : 101
-     * txt : 多云
+     * date : 2016-05-10 13:00
+     * hum : 26
+     * pop : 0
+     * pres : 1009
+     * tmp : 30
+     * wind : {"deg":"192","dir":"西南风","sc":"微风","spd":"9"}
      */
 
-    private CondBean cond;
-    /**
-     * cond : {"code":"101","txt":"多云"}
-     * fl : 19
-     * hum : 64
-     * pcpn : 0
-     * pres : 1005
-     * tmp : 18
-     * vis : 10
-     * wind : {"deg":"100","dir":"北风","sc":"3-4","spd":"14"}
-     */
-
-    private String fl;
+    private String date;
     private String hum;
-    private String pcpn;
+    private String pop;
     private String pres;
     private String tmp;
-    private String vis;
     /**
-     * deg : 100
-     * dir : 北风
-     * sc : 3-4
-     * spd : 14
+     * deg : 192
+     * dir : 西南风
+     * sc : 微风
+     * spd : 9
      */
 
     private WindBean wind;
 
-    public CondBean getCond() {
-        return cond;
+    public String getDate() {
+        return date;
     }
 
-    public void setCond(CondBean cond) {
-        this.cond = cond;
-    }
-
-    public String getFl() {
-        return fl;
-    }
-
-    public void setFl(String fl) {
-        this.fl = fl;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getHum() {
@@ -61,12 +43,12 @@ public class NowData {
         this.hum = hum;
     }
 
-    public String getPcpn() {
-        return pcpn;
+    public String getPop() {
+        return pop;
     }
 
-    public void setPcpn(String pcpn) {
-        this.pcpn = pcpn;
+    public void setPop(String pop) {
+        this.pop = pop;
     }
 
     public String getPres() {
@@ -85,41 +67,12 @@ public class NowData {
         this.tmp = tmp;
     }
 
-    public String getVis() {
-        return vis;
-    }
-
-    public void setVis(String vis) {
-        this.vis = vis;
-    }
-
     public WindBean getWind() {
         return wind;
     }
 
     public void setWind(WindBean wind) {
         this.wind = wind;
-    }
-
-    public static class CondBean {
-        private String code;
-        private String txt;
-
-        public String getCode() {
-            return code;
-        }
-
-        public void setCode(String code) {
-            this.code = code;
-        }
-
-        public String getTxt() {
-            return txt;
-        }
-
-        public void setTxt(String txt) {
-            this.txt = txt;
-        }
     }
 
     public static class WindBean {

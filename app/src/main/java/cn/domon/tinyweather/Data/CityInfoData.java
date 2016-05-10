@@ -9,6 +9,7 @@ public class CityInfoData {
     private String cnty;
     private String lat;
     private String lon;
+    private String prov;
 
     public String getProv() {
         return prov;
@@ -17,8 +18,6 @@ public class CityInfoData {
     public void setProv(String prov) {
         this.prov = prov;
     }
-
-    private String prov;
 
     public String getCity() {
         return city;

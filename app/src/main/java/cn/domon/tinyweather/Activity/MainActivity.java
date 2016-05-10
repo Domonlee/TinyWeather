@@ -19,8 +19,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.domon.tinyweather.Constant;
-import cn.domon.tinyweather.Data.CityInfoListData;
+import cn.domon.tinyweather.Data.A;
 import cn.domon.tinyweather.Data.CityInfoData;
+import cn.domon.tinyweather.Data.CityInfoListData;
 import cn.domon.tinyweather.R;
 import cn.domon.tinyweather.VolleyRequestManager;
 
@@ -38,14 +39,23 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.myBtn1)
     void onClickBtn1() {
-        RequestQueue requestQueue = VolleyRequestManager.getRequestQueue();
+        final RequestQueue requestQueue = VolleyRequestManager.getRequestQueue();
 
         mRequest = new StringRequest(Request.Method.GET, Constant.CITY_ID + "CN101010100" + Constant.W_KEY,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        KLog.json(TAG, response);
-                        KLog.e(response);
+//                        KLog.json(TAG, response);
+//                        KLog.e(response);
+
+
+                        A weatherInfoData = gson.fromJson(response, A.class);
+                        List<A.HeBean> a = weatherInfoData.getHe();
+                        A.HeBean.BasicBean basicBean = a.get(0).getBasic();
+                        String city = basicBean.getCity();
+                        KLog.e(TAG, weatherInfoData.toString());
+
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -71,7 +81,7 @@ public class MainActivity extends BaseActivity {
 
                         List<CityInfoData> cityInfoData = cityInfoListData.getCity_info();
                         KLog.e("cityinfoData", cityInfoData.toString());
-                        KLog.e("cityinfoData",cityInfoData.size() + "==size()");
+                        KLog.e("cityinfoData", cityInfoData.size() + "==size()");
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -135,7 +145,7 @@ public class MainActivity extends BaseActivity {
         mContext = this;
 
         ButterKnife.bind(this);
-        mTestBtn2.performClick();
+        mTestBtn1.performClick();
         gson = new Gson();
     }
 

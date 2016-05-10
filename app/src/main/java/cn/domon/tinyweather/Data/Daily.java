@@ -1,37 +1,34 @@
 package cn.domon.tinyweather.Data;
 
 /**
- * Created by Domon on 16-5-5.
+ * Created by Domon on 16-5-10.
  */
-public class DailyForecastData {
-
+public class Daily {
     /**
-     * mr : 04:13
-     * ms : 17:20
-     * sr : 05:09
-     * ss : 19:12
+     * sr : 05:03
+     * ss : 19:17
      */
 
     private AstroBean astro;
     /**
      * code_d : 100
-     * code_n : 100
+     * code_n : 101
      * txt_d : 晴
-     * txt_n : 晴
+     * txt_n : 多云
      */
 
     private CondBean cond;
     /**
-     * astro : {"mr":"04:13","ms":"17:20","sr":"05:09","ss":"19:12"}
-     * cond : {"code_d":"100","code_n":"100","txt_d":"晴","txt_n":"晴"}
-     * date : 2016-05-05
-     * hum : 11
-     * pcpn : 0.9
-     * pop : 18
-     * pres : 1003
-     * tmp : {"max":"31","min":"14"}
+     * astro : {"sr":"05:03","ss":"19:17"}
+     * cond : {"code_d":"100","code_n":"101","txt_d":"晴","txt_n":"多云"}
+     * date : 2016-05-10
+     * hum : 23
+     * pcpn : 0.0
+     * pop : 0
+     * pres : 1008
+     * tmp : {"max":"28","min":"17"}
      * vis : 10
-     * wind : {"deg":"319","dir":"无持续风向","sc":"4-5","spd":"21"}
+     * wind : {"deg":"192","dir":"无持续风向","sc":"微风","spd":"2"}
      */
 
     private String date;
@@ -40,17 +37,17 @@ public class DailyForecastData {
     private String pop;
     private String pres;
     /**
-     * max : 31
-     * min : 14
+     * max : 28
+     * min : 17
      */
 
     private TmpBean tmp;
     private String vis;
     /**
-     * deg : 319
+     * deg : 192
      * dir : 无持续风向
-     * sc : 4-5
-     * spd : 21
+     * sc : 微风
+     * spd : 2
      */
 
     private WindBean wind;
@@ -136,26 +133,8 @@ public class DailyForecastData {
     }
 
     public static class AstroBean {
-        private String mr;
-        private String ms;
         private String sr;
         private String ss;
-
-        public String getMr() {
-            return mr;
-        }
-
-        public void setMr(String mr) {
-            this.mr = mr;
-        }
-
-        public String getMs() {
-            return ms;
-        }
-
-        public void setMs(String ms) {
-            this.ms = ms;
-        }
 
         public String getSr() {
             return sr;

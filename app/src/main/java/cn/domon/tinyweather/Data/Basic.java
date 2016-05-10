@@ -16,40 +16,73 @@ public class Basic {
 
     private Update update;
 
-    public void setCity(String city){
+    public void setCity(String city) {
         this.city = city;
     }
-    public String getCity(){
+
+    public String getCity() {
         return this.city;
     }
-    public void setCnty(String cnty){
+
+    public void setCnty(String cnty) {
         this.cnty = cnty;
     }
-    public String getCnty(){
+
+    public String getCnty() {
         return this.cnty;
     }
-    public void setId(String id){
+
+    public void setId(String id) {
         this.id = id;
     }
-    public String getId(){
+
+    public String getId() {
         return this.id;
     }
-    public void setLat(String lat){
+
+    public void setLat(String lat) {
         this.lat = lat;
     }
-    public String getLat(){
+
+    public String getLat() {
         return this.lat;
     }
-    public void setLon(String lon){
+
+    public void setLon(String lon) {
         this.lon = lon;
     }
-    public String getLon(){
+
+    public String getLon() {
         return this.lon;
     }
-    public void setUpdate(Update update){
+
+    public void setUpdate(Update update) {
         this.update = update;
     }
-    public Update getUpdate(){
+
+    public Update getUpdate() {
         return this.update;
+    }
+
+    public class Update {
+        private String loc;
+
+        private String utc;
+
+        public String getLoc() {
+            return loc;
+        }
+
+        public void setLoc(String loc) {
+            this.loc = loc;
+        }
+
+        public String getUtc() {
+            return utc;
+        }
+
+        public void setUtc(String utc) {
+            this.utc = utc;
+        }
     }
 }
