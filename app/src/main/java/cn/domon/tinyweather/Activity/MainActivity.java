@@ -10,12 +10,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 import com.socks.library.KLog;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.domon.tinyweather.Constant;
+import cn.domon.tinyweather.Data.CityInfoListData;
+import cn.domon.tinyweather.Data.CityInfoData;
 import cn.domon.tinyweather.R;
 import cn.domon.tinyweather.VolleyRequestManager;
 
@@ -60,12 +65,18 @@ public class MainActivity extends BaseActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.e(TAG, response);
+//                        Log.e(TAG, response);
+                        CityInfoListData cityInfoListData = gson.fromJson(response, CityInfoListData.class);
+//                        KLog.e("cityinfoListData", cityInfoListData.toString());
+
+                        List<CityInfoData> cityInfoData = cityInfoListData.getCity_info();
+                        KLog.e("cityinfoData", cityInfoData.toString());
+                        KLog.e("cityinfoData",cityInfoData.size() + "==size()");
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "request Error");
+                Log.e(TAG, "request Error:" + error);
             }
         });
 
@@ -112,9 +123,9 @@ public class MainActivity extends BaseActivity {
         requestQueue.add(mRequest);
     }
 
-
     private Context mContext;
     private StringRequest mRequest;
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +135,8 @@ public class MainActivity extends BaseActivity {
         mContext = this;
 
         ButterKnife.bind(this);
+        mTestBtn2.performClick();
+        gson = new Gson();
     }
 
     @Override

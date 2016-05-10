@@ -3,12 +3,22 @@ package cn.domon.tinyweather.Data;
 /**
  * Created by Domon on 16-5-5.
  */
-public class BaseCityData {
+public class CityInfoData {
     private String city;
     private String id;
     private String cnty;
     private String lat;
     private String lon;
+
+    public String getProv() {
+        return prov;
+    }
+
+    public void setProv(String prov) {
+        this.prov = prov;
+    }
+
+    private String prov;
 
     public String getCity() {
         return city;
@@ -48,5 +58,17 @@ public class BaseCityData {
 
     public void setLon(String lon) {
         this.lon = lon;
+    }
+
+    @Override
+    public String toString() {
+        return "CityInfoData{" +
+                "city='" + city + '\'' +
+                ", id='" + id + '\'' +
+                ", cnty='" + cnty + '\'' +
+                ", lat='" + lat + '\'' +
+                ", lon='" + lon + '\'' +
+                ", prov='" + prov + '\'' +
+                '}';
     }
 }
