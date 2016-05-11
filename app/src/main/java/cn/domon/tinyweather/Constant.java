@@ -16,5 +16,7 @@ public class Constant {
     public static final String GET_AW_CITYLIST = BASE_URL + "/citylist?search=" + "allworld" + W_KEY;
     public static final String GET_HC_CITYLIST = BASE_URL + "/citylist?search=" + "hotworld" + W_KEY;
 
+    public static final String GET_ZHDAILY_SATRT = "http://news-at.zhihu.com/api/4/start-image/1080*1776";
+
 
 }
