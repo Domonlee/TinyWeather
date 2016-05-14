@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Domon on 16-5-10.
  */
-public class A {
+public class WeatherInfoData {
 
     /**
      * aqi : {"city":{"aqi":"46","co":"0","no2":"28","o3":"73","pm10":"46","pm25":"41","qlty":"优","so2":"2"}}
@@ -1070,7 +1070,7 @@ public class A {
 
     @Override
     public String toString() {
-        return "A{" +
+        return "WeatherInfoData{" +
                 "He=" + He +
                 '}';
     }
