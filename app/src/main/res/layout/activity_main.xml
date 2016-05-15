@@ -1,36 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Activity.MainActivity">
 
-    <Button
-        android:id="@+id/myBtn1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get BeiJing Weather"
-        android:textSize="16sp" />
+    <LinearLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/background"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/myBtn2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get ALL China City List"
-        android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#e0000000"
+            android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/myBtn3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get ALL World City List"
-        android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/title_menu_iv"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                android:src="@mipmap/title_menu_icon" />
 
-    <Button
-        android:id="@+id/myBtn4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Hot City List"
-        android:textSize="16sp" />
-</LinearLayout>
+            <LinearLayout
+                android:id="@+id/title_mid_ll"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:src="@mipmap/title_location_cion" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:text="西安"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/title_add_iv"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                android:src="@mipmap/title_add_icon" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--The navigation drawer-->
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#ffee3e" />
+
+</android.support.v4.widget.DrawerLayout>
