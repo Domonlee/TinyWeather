@@ -11,9 +11,10 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/background"
+        android:background="#54544d"
         android:orientation="vertical">
 
+        <!--title layout-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -61,6 +62,64 @@
                 android:layout_margin="8dp"
                 android:src="@mipmap/title_add_icon" />
         </LinearLayout>
+
+        <!-- today info -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:text="13℃"
+                android:textColor="#fff"
+                android:textSize="60sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingLeft="20dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/wind_speed_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:text="2级"
+                        android:textColor="#fee"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <!-- 24H info -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/hours_rv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+
     </LinearLayout>
 
     <!--The navigation drawer-->
