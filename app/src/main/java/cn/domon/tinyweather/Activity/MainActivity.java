@@ -1,28 +1,48 @@
 package cn.domon.tinyweather.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.socks.library.KLog;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.domon.tinyweather.Constant;
+import cn.domon.tinyweather.Data.WeatherInfoData;
 import cn.domon.tinyweather.R;
+import cn.domon.tinyweather.Utils.NetUtil;
+import cn.domon.tinyweather.VolleyRequestManager;
 
 public class MainActivity extends BaseActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String WEATHER_REQ_URL = Constant.CITY_ID + "CN101010100" + Constant.W_KEY;
     private Context mContext;
     private StringRequest mRequest;
+    private WeatherInfoData.HeBean.BasicBean basicBean;
+    private List<WeatherInfoData.HeBean.DailyForecastBean> dailyForecastBean;
+    private List<WeatherInfoData.HeBean.HourlyForecastBean> hourlyForecastBeen;
+    private WeatherInfoData.HeBean.NowBean nowBeen;
+    private WeatherInfoData.HeBean.SuggestionBean suggestionBean;
     Gson gson;
 
     @Bind(R.id.drawer_layout)
@@ -31,54 +51,9 @@ public class MainActivity extends BaseActivity {
     ListView mDrawerList;
     @Bind(R.id.hours_rv)
     RecyclerView mRecyclerView;
+    @Bind(R.id.main_tmp_tv)
+    TextView mMainTmpTv;
 
-    //    @OnClick(R.id.myBtn1)
-//    void onClickBtn1() {
-//        final RequestQueue requestQueue = VolleyRequestManager.getRequestQueue();
-//
-//        mRequest = new StringRequest(Request.Method.GET, Constant.CITY_ID + "CN101010100" + Constant.W_KEY,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-////                        KLog.json(TAG, response);
-//                        WeatherInfoData weatherInfoData = gson.fromJson(response, WeatherInfoData.class);
-//                        List<WeatherInfoData.HeBean> hebean = weatherInfoData.getHe();
-//                        WeatherInfoData.HeBean.BasicBean basicBean = hebean.get(0).getBasic();
-//                        String city = basicBean.getCity();
-//                        KLog.e(TAG, weatherInfoData.toString());
-//
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e(TAG, "request Error");
-//            }
-//        });
-//
-//        requestQueue.add(mRequest);
-//    }
-//
-//    @OnClick(R.id.myBtn2)
-//    void onClickBtn2() {
-//        RequestQueue requestQueue = VolleyRequestManager.getRequestQueue();
-//
-//        mRequest = new StringRequest(Request.Method.GET, Constant.GET_AC_CITYLIST,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        CityInfoListData cityInfoListData = gson.fromJson(response, CityInfoListData.class);
-//                        List<CityInfoData> cityInfoData = cityInfoListData.getCity_info();
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e(TAG, "request Error:" + error);
-//            }
-//        });
-//
-//        requestQueue.add(mRequest);
-//    }
-//
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,14 +61,49 @@ public class MainActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
+        Intent intent = getIntent();
+        KLog.e(intent.getStringExtra(NetUtil.IP_ADDRESS));
+
         ButterKnife.bind(this);
         mContext = this;
 //        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this,5));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 5));
         mRecyclerView.setAdapter(new RecyclerViewAdapter(mContext));
 
-
         gson = new Gson();
+
+        reqForWeatherInfo();
+//        mMainTmpTv.setText(nowBeen.getTmp());
+    }
+
+    private void reqForWeatherInfo() {
+        RequestQueue requestQueue = VolleyRequestManager.getRequestQueue();
+        mRequest = new StringRequest(Request.Method.GET, WEATHER_REQ_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        WeatherInfoData weatherInfoData = gson.fromJson(response, WeatherInfoData.class);
+                        List<WeatherInfoData.HeBean> hebeans = weatherInfoData.getHe();
+                        WeatherInfoData.HeBean heBean = hebeans.get(0);
+
+                        if (heBean.getStatus().equals("ok")) {
+                            basicBean = heBean.getBasic();
+                            dailyForecastBean = heBean.getDaily_forecast();
+                            hourlyForecastBeen = heBean.getHourly_forecast();
+                            nowBeen = heBean.getNow();
+                            suggestionBean = heBean.getSuggestion();
+                            KLog.e("status", heBean.getStatus());
+                            mMainTmpTv.setText(nowBeen.getTmp());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "request Error");
+            }
+        });
+
+        requestQueue.add(mRequest);
     }
 
     @Override
