@@ -1,6 +1,7 @@
 package cn.domon.tinyweather.Activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.domon.tinyweather.Constant;
 import cn.domon.tinyweather.R;
+import cn.domon.tinyweather.Utils.NetUtil;
 import cn.domon.tinyweather.VolleyRequestManager;
 
 /**
@@ -34,6 +36,7 @@ public class SplashActivity extends Activity {
     ImageView mLoadingIv;
 
     private StringRequest mRequest;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class SplashActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+        mContext = this;
 
         initImage();
     }
@@ -105,6 +109,9 @@ public class SplashActivity extends Activity {
 
     private void stratActivity() {
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+
+        intent.putExtra(NetUtil.IP_ADDRESS, NetUtil.getWifiIpAddress(mContext));
+
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();

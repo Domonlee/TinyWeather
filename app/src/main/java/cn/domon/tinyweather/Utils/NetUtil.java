@@ -13,6 +13,7 @@ import java.util.Enumeration;
  * Created by Domon on 16-5-15.
  */
 public class NetUtil {
+    public static final String IP_ADDRESS = "IPAddress";
 
     /**
      * get IP , When is wifi
