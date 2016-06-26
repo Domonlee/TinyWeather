@@ -71,6 +71,13 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/main_updatetime_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp" />
+
+            <TextView
                 android:id="@+id/main_tmp_tv"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -88,6 +95,7 @@
                 android:paddingLeft="20dp">
 
                 <LinearLayout
+                    android:id="@+id/wind_ll"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -99,19 +107,38 @@
                         android:src="@mipmap/wind_speed_icon" />
 
                     <TextView
+                        android:id="@+id/wind_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:text="2级"
                         android:textColor="#fee"
                         android:textSize="20sp" />
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/wind_ll"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/humidity_icon" />
+
+                    <TextView
+                        android:id="@+id/humidity_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:textColor="#fee"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
             </RelativeLayout>
-
-
         </LinearLayout>
 
         <!-- 24H info -->

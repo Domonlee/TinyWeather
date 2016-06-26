@@ -6,12 +6,14 @@
     android:padding="10dp">
 
     <TextView
+        android:id="@+id/daily_hour_tv"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:gravity="center"
         android:text="21时" />
 
     <ImageView
+        android:id="@+id/daily_weather_iv"
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_margin="10dp"
@@ -19,6 +21,7 @@
         android:src="@mipmap/sunshine_icon" />
 
     <TextView
+        android:id="@+id/daily_temp_tv"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:gravity="center"

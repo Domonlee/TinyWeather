@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import butterknife.ButterKnife;
 import cn.domon.tinyweather.Constant;
 import cn.domon.tinyweather.Data.WeatherInfoData;
 import cn.domon.tinyweather.R;
+import cn.domon.tinyweather.Utils.CommUtil;
 import cn.domon.tinyweather.Utils.NetUtil;
 import cn.domon.tinyweather.VolleyRequestManager;
 
@@ -53,6 +55,12 @@ public class MainActivity extends BaseActivity {
     RecyclerView mRecyclerView;
     @Bind(R.id.main_tmp_tv)
     TextView mMainTmpTv;
+    @Bind(R.id.main_updatetime_tv)
+    TextView mUpdateTimeTv;
+    @Bind(R.id.humidity_tv)
+    TextView mHumidityTv;
+    @Bind(R.id.wind_tv)
+    TextView mWindTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +76,11 @@ public class MainActivity extends BaseActivity {
         mContext = this;
 //        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 5));
-        mRecyclerView.setAdapter(new RecyclerViewAdapter(mContext));
 
         gson = new Gson();
 
         reqForWeatherInfo();
+        mRecyclerView.setAdapter(new RecyclerViewAdapter(mContext, hourlyForecastBeen));
 //        mMainTmpTv.setText(nowBeen.getTmp());
     }
 
@@ -93,7 +101,16 @@ public class MainActivity extends BaseActivity {
                             nowBeen = heBean.getNow();
                             suggestionBean = heBean.getSuggestion();
                             KLog.e("status", heBean.getStatus());
-                            mMainTmpTv.setText(nowBeen.getTmp());
+                            //TODO asyn
+                            KLog.e("get url", WEATHER_REQ_URL);
+                            mMainTmpTv.setText(nowBeen.getTmp() + "℃");
+                            mUpdateTimeTv.setText("最后更新时间：" + basicBean.getUpdate().getLoc());
+                            mWindTv.setText(nowBeen.getWind().getSc() + "级");
+                            mHumidityTv.setText(nowBeen.getHum() + "%");
+                            KLog.e("time", CommUtil.getTimeForDataString(hourlyForecastBeen.get(0).getDate()));
+                            mRecyclerView.setAdapter(new RecyclerViewAdapter(mContext, hourlyForecastBeen));
+
+
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -112,14 +129,16 @@ public class MainActivity extends BaseActivity {
         ButterKnife.unbind(this);
     }
 
-    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HourItemViewHolder> {
 
         private Context context;
         private LayoutInflater layoutInflater;
+        private List<WeatherInfoData.HeBean.HourlyForecastBean> hourlyForecastBeans;
 
-        public RecyclerViewAdapter(Context context) {
+        public RecyclerViewAdapter(Context context, List<WeatherInfoData.HeBean.HourlyForecastBean> hourlyForecastBean) {
             this.context = context;
             this.layoutInflater = LayoutInflater.from(context);
+            this.hourlyForecastBeans = hourlyForecastBean;
         }
 
         @Override
@@ -128,19 +147,30 @@ public class MainActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(HourItemViewHolder holder, int position) {
             //TODO
+            holder.dailyHourTv.setText(CommUtil.getTimeForDataString(hourlyForecastBeans.get(position).getDate()));
+            holder.dailyTempTv.setText(hourlyForecastBeans.get(position).getTmp() + "℃");
+
+
         }
 
         @Override
         public int getItemCount() {
-            return 5;
+            return hourlyForecastBeans == null ? 0 : hourlyForecastBeans.size();
         }
 
         public class HourItemViewHolder extends RecyclerView.ViewHolder {
+            @Bind(R.id.daily_hour_tv)
+            TextView dailyHourTv;
+            @Bind(R.id.daily_temp_tv)
+            TextView dailyTempTv;
+            @Bind(R.id.daily_weather_iv)
+            ImageView dailyWeatherIv;
 
             public HourItemViewHolder(View itemView) {
                 super(itemView);
+                ButterKnife.bind(this, itemView);
             }
         }
     }
