@@ -28,6 +28,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.domon.tinyweather.Constant;
 import cn.domon.tinyweather.Data.WeatherInfoData;
 import cn.domon.tinyweather.R;
@@ -61,6 +62,12 @@ public class MainActivity extends BaseActivity {
     TextView mHumidityTv;
     @Bind(R.id.wind_tv)
     TextView mWindTv;
+
+    @OnClick(R.id.title_add_iv)
+    void OnClickAddBtn() {
+        Intent intent = new Intent(this, CityListActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,8 +158,6 @@ public class MainActivity extends BaseActivity {
             //TODO
             holder.dailyHourTv.setText(CommUtil.getTimeForDataString(hourlyForecastBeans.get(position).getDate()));
             holder.dailyTempTv.setText(hourlyForecastBeans.get(position).getTmp() + "℃");
-
-
         }
 
         @Override
