@@ -17,9 +17,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.domon.tinyweather.Constant;
+import cn.domon.tinyweather.Data.CityInfoData;
 import cn.domon.tinyweather.Data.CityInfoListData;
 import cn.domon.tinyweather.R;
 import cn.domon.tinyweather.VolleyRequestManager;
@@ -42,7 +45,8 @@ public class CityListActivity extends BaseActivity {
         ButterKnife.bind(this);
         mContext = this;
 
-        mCityListRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+//        mCityListRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mCityListRv.setLayoutManager(new LinearLayoutManager(this));
 
         RequestQueue requestQueue = VolleyRequestManager.getRequestQueue();
         mStringRequest = new StringRequest(Request.Method.GET, Constant.GET_AC_CITYLIST,
@@ -52,8 +56,8 @@ public class CityListActivity extends BaseActivity {
                         KLog.e(response);
                         Gson gson = new Gson();
                         CityInfoListData cityInfoListData = gson.fromJson(response, CityInfoListData.class);
-                        mCityListRv.setAdapter(new RecyclerViewAdapter(mContext, cityInfoListData));
-
+                        List<CityInfoData> cityInfoDatas = cityInfoListData.getCity_info();
+                        mCityListRv.setAdapter(new RecyclerViewAdapter(mContext, cityInfoDatas));
                     }
                 },
                 new Response.ErrorListener() {
@@ -76,12 +80,12 @@ public class CityListActivity extends BaseActivity {
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.CityListViewHolder> {
         private Context context;
         private LayoutInflater layoutInflater;
-        private CityInfoListData cityInfoListData;
+        private List<CityInfoData> cityInfoDatas;
 
-        public RecyclerViewAdapter(Context context, CityInfoListData cityInfoListData) {
+        public RecyclerViewAdapter(Context context, List<CityInfoData> cityInfoListData) {
             this.context = context;
             this.layoutInflater = LayoutInflater.from(context);
-            this.cityInfoListData = cityInfoListData;
+            this.cityInfoDatas = cityInfoListData;
         }
 
         @Override
@@ -91,14 +95,12 @@ public class CityListActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(CityListViewHolder holder, int position) {
-
-            holder.mCityNametv.setText(cityInfoListData.getCity_info().toString());
-
+            holder.mCityNametv.setText(cityInfoDatas.get(position).getCity());
         }
 
         @Override
         public int getItemCount() {
-            return cityInfoListData.getCity_info().size();
+            return cityInfoDatas == null ? 0 : cityInfoDatas.size();
         }
 
         public class CityListViewHolder extends RecyclerView.ViewHolder {
@@ -110,7 +112,5 @@ public class CityListActivity extends BaseActivity {
                 ButterKnife.bind(this, itemView);
             }
         }
-
     }
-
 }
