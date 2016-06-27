@@ -46,6 +46,7 @@ public class MainActivity extends BaseActivity {
     private List<WeatherInfoData.HeBean.HourlyForecastBean> hourlyForecastBeen;
     private WeatherInfoData.HeBean.NowBean nowBeen;
     private WeatherInfoData.HeBean.SuggestionBean suggestionBean;
+    private RecyclerViewAdapter mAdapter;
     Gson gson;
 
     @Bind(R.id.drawer_layout)
@@ -81,14 +82,13 @@ public class MainActivity extends BaseActivity {
 
         ButterKnife.bind(this);
         mContext = this;
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 5));
 
         gson = new Gson();
 
         reqForWeatherInfo();
-        mRecyclerView.setAdapter(new RecyclerViewAdapter(mContext, hourlyForecastBeen));
-//        mMainTmpTv.setText(nowBeen.getTmp());
+        mAdapter = new RecyclerViewAdapter(mContext, hourlyForecastBeen);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     private void reqForWeatherInfo() {
@@ -115,9 +115,8 @@ public class MainActivity extends BaseActivity {
                             mWindTv.setText(nowBeen.getWind().getSc() + "级");
                             mHumidityTv.setText(nowBeen.getHum() + "%");
                             KLog.e("time", CommUtil.getTimeForDataString(hourlyForecastBeen.get(0).getDate()));
-                            mRecyclerView.setAdapter(new RecyclerViewAdapter(mContext, hourlyForecastBeen));
-
-
+//                            mRecyclerView.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
                 }, new Response.ErrorListener() {

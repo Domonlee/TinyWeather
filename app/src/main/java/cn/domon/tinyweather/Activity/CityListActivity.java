@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.cnxad.jar.jicommon.ToastUtil;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
 
@@ -33,7 +34,8 @@ import cn.domon.tinyweather.VolleyRequestManager;
 public class CityListActivity extends BaseActivity {
     private StringRequest mStringRequest;
     private Context mContext;
-    public static final String CITYINFO_REQ_URL = Constant.CITY_ID + "CN101010100" + Constant.W_KEY;
+    private RecyclerViewAdapter mAdapter;
+    private List<CityInfoData> cityInfoDatas;
 
     @Bind(R.id.citylist_rv)
     RecyclerView mCityListRv;
@@ -42,22 +44,29 @@ public class CityListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_citylist);
+
         ButterKnife.bind(this);
         mContext = this;
 
-//        mCityListRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mCityListRv.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new RecyclerViewAdapter(mContext, cityInfoDatas);
+        mCityListRv.setAdapter(mAdapter);
 
+        reqForCityListInfo();
+    }
+
+    private void reqForCityListInfo() {
         RequestQueue requestQueue = VolleyRequestManager.getRequestQueue();
         mStringRequest = new StringRequest(Request.Method.GET, Constant.GET_AC_CITYLIST,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        KLog.e(response);
                         Gson gson = new Gson();
                         CityInfoListData cityInfoListData = gson.fromJson(response, CityInfoListData.class);
-                        List<CityInfoData> cityInfoDatas = cityInfoListData.getCity_info();
-                        mCityListRv.setAdapter(new RecyclerViewAdapter(mContext, cityInfoDatas));
+                        if (cityInfoListData.getStatus().equals("ok")) {
+                            cityInfoDatas = cityInfoListData.getCity_info();
+                            mAdapter.notifyDataSetChanged();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -67,8 +76,6 @@ public class CityListActivity extends BaseActivity {
                     }
                 });
         requestQueue.add(mStringRequest);
-
-
     }
 
     @Override
@@ -96,6 +103,7 @@ public class CityListActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(CityListViewHolder holder, int position) {
             holder.mCityNametv.setText(cityInfoDatas.get(position).getCity());
+            KLog.e("cityId", cityInfoDatas.get(position).getId());
         }
 
         @Override
@@ -110,6 +118,13 @@ public class CityListActivity extends BaseActivity {
             public CityListViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
+
+                mCityNametv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ToastUtil.showToast(context, mCityNametv.getText().toString());
+                    }
+                });
             }
         }
     }
