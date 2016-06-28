@@ -3,6 +3,8 @@ package cn.domon.tinyweather.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +26,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -33,19 +36,19 @@ import cn.domon.tinyweather.Constant;
 import cn.domon.tinyweather.Data.WeatherInfoData;
 import cn.domon.tinyweather.R;
 import cn.domon.tinyweather.Utils.CommUtil;
-import cn.domon.tinyweather.Utils.NetUtil;
 import cn.domon.tinyweather.VolleyRequestManager;
 
 public class MainActivity extends BaseActivity {
-    public static final String TAG = MainActivity.class.getSimpleName();
-    public static final String WEATHER_REQ_URL = Constant.CITY_ID + "CN101010100" + Constant.W_KEY;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String WEATHER_REQ_URL = Constant.CITY_ID + "CN101010100" + Constant.W_KEY;
+    private static final int HANDLER_OK = 1;
     private Context mContext;
     private StringRequest mRequest;
-    private WeatherInfoData.HeBean.BasicBean basicBean;
-    private List<WeatherInfoData.HeBean.DailyForecastBean> dailyForecastBean;
-    private List<WeatherInfoData.HeBean.HourlyForecastBean> hourlyForecastBeen;
-    private WeatherInfoData.HeBean.NowBean nowBeen;
-    private WeatherInfoData.HeBean.SuggestionBean suggestionBean;
+    private WeatherInfoData.HeBean.BasicBean mBasicBean;
+    private List<WeatherInfoData.HeBean.DailyForecastBean> mDailyForecastBean;
+    private List<WeatherInfoData.HeBean.HourlyForecastBean> mHourlyForecastBeen = new ArrayList<>();
+    private WeatherInfoData.HeBean.NowBean mNowBeen;
+    private WeatherInfoData.HeBean.SuggestionBean mSuggestionBean;
     private RecyclerViewAdapter mAdapter;
     Gson gson;
 
@@ -70,6 +73,20 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case HANDLER_OK:
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +95,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent();
-        KLog.e(intent.getStringExtra(NetUtil.IP_ADDRESS));
+//        KLog.e(intent.getStringExtra(NetUtil.IP_ADDRESS));
 
         ButterKnife.bind(this);
         mContext = this;
@@ -87,7 +104,7 @@ public class MainActivity extends BaseActivity {
         gson = new Gson();
 
         reqForWeatherInfo();
-        mAdapter = new RecyclerViewAdapter(mContext, hourlyForecastBeen);
+        mAdapter = new RecyclerViewAdapter(mContext, mHourlyForecastBeen);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -102,21 +119,27 @@ public class MainActivity extends BaseActivity {
                         WeatherInfoData.HeBean heBean = hebeans.get(0);
 
                         if (heBean.getStatus().equals("ok")) {
-                            basicBean = heBean.getBasic();
-                            dailyForecastBean = heBean.getDaily_forecast();
-                            hourlyForecastBeen = heBean.getHourly_forecast();
-                            nowBeen = heBean.getNow();
-                            suggestionBean = heBean.getSuggestion();
-                            KLog.e("status", heBean.getStatus());
+                            mBasicBean = heBean.getBasic();
+                            mDailyForecastBean = heBean.getDaily_forecast();
+                            List<WeatherInfoData.HeBean.HourlyForecastBean> hourlyForecastBeens = heBean.getHourly_forecast();
+                            mNowBeen = heBean.getNow();
+                            mSuggestionBean = heBean.getSuggestion();
                             //TODO asyn
                             KLog.e("get url", WEATHER_REQ_URL);
-                            mMainTmpTv.setText(nowBeen.getTmp() + "℃");
-                            mUpdateTimeTv.setText("最后更新时间：" + basicBean.getUpdate().getLoc());
-                            mWindTv.setText(nowBeen.getWind().getSc() + "级");
-                            mHumidityTv.setText(nowBeen.getHum() + "%");
-                            KLog.e("time", CommUtil.getTimeForDataString(hourlyForecastBeen.get(0).getDate()));
-//                            mRecyclerView.setAdapter(mAdapter);
-                            mAdapter.notifyDataSetChanged();
+
+                            mMainTmpTv.setText(mNowBeen.getTmp() + "℃");
+                            mUpdateTimeTv.setText("最后更新时间：" + mBasicBean.getUpdate().getLoc());
+                            mWindTv.setText(mNowBeen.getWind().getSc() + "级");
+                            mHumidityTv.setText(mNowBeen.getHum() + "%");
+
+                            //not used
+                            Message message = Message.obtain();
+                            message.what = HANDLER_OK;
+                            mHandler.sendMessage(message);
+
+                            mHourlyForecastBeen.clear();
+                            mHourlyForecastBeen.addAll(hourlyForecastBeens);
+                            mAdapter.notifyItemInserted(0);
                         }
                     }
                 }, new Response.ErrorListener() {
