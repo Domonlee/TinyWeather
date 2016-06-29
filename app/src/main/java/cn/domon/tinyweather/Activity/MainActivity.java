@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,6 @@ import cn.domon.tinyweather.VolleyRequestManager;
 
 public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String WEATHER_REQ_URL = Constant.CITY_ID + "CN101010100" + Constant.W_KEY;
     private static final int HANDLER_OK = 1;
     private Context mContext;
     private StringRequest mRequest;
@@ -50,6 +50,8 @@ public class MainActivity extends BaseActivity {
     private WeatherInfoData.HeBean.NowBean mNowBeen;
     private WeatherInfoData.HeBean.SuggestionBean mSuggestionBean;
     private RecyclerViewAdapter mAdapter;
+    private String mCityId;
+    private String mReqUrl;
     Gson gson;
 
     @Bind(R.id.drawer_layout)
@@ -96,6 +98,12 @@ public class MainActivity extends BaseActivity {
 
         Intent intent = getIntent();
 //        KLog.e(intent.getStringExtra(NetUtil.IP_ADDRESS));
+        mCityId = intent.getStringExtra("cityId");
+        if (TextUtils.isEmpty(mCityId)) {
+            mCityId = "CN101310230";
+        }
+        mReqUrl = Constant.CITY_ID + mCityId + Constant.W_KEY;
+
 
         ButterKnife.bind(this);
         mContext = this;
@@ -103,14 +111,14 @@ public class MainActivity extends BaseActivity {
 
         gson = new Gson();
 
-        reqForWeatherInfo();
+        reqForWeatherInfo(mReqUrl);
         mAdapter = new RecyclerViewAdapter(mContext, mHourlyForecastBeen);
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void reqForWeatherInfo() {
+    private void reqForWeatherInfo(final String url) {
         RequestQueue requestQueue = VolleyRequestManager.getRequestQueue();
-        mRequest = new StringRequest(Request.Method.GET, WEATHER_REQ_URL,
+        mRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -125,7 +133,7 @@ public class MainActivity extends BaseActivity {
                             mNowBeen = heBean.getNow();
                             mSuggestionBean = heBean.getSuggestion();
                             //TODO asyn
-                            KLog.e("get url", WEATHER_REQ_URL);
+                            KLog.e("get url", url);
 
                             mMainTmpTv.setText(mNowBeen.getTmp() + "℃");
                             mUpdateTimeTv.setText("最后更新时间：" + mBasicBean.getUpdate().getLoc());
