@@ -14,10 +14,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.cnxad.jar.jicommon.ToastUtil;
 import com.google.gson.Gson;
 import com.socks.library.KLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -35,7 +35,7 @@ public class CityListActivity extends BaseActivity {
     private StringRequest mStringRequest;
     private Context mContext;
     private RecyclerViewAdapter mAdapter;
-    private List<CityInfoData> cityInfoDatas;
+    private List<CityInfoData> mCityInfoDatas = new ArrayList<>();
 
     @Bind(R.id.citylist_rv)
     RecyclerView mCityListRv;
@@ -49,8 +49,14 @@ public class CityListActivity extends BaseActivity {
         mContext = this;
 
         mCityListRv.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new RecyclerViewAdapter(mContext, cityInfoDatas);
+        mAdapter = new RecyclerViewAdapter(mContext, mCityInfoDatas);
         mCityListRv.setAdapter(mAdapter);
+        mAdapter.setClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, int postion) {
+                KLog.e(mCityInfoDatas.get(postion).getId().toString());
+            }
+        });
 
         reqForCityListInfo();
     }
@@ -64,7 +70,10 @@ public class CityListActivity extends BaseActivity {
                         Gson gson = new Gson();
                         CityInfoListData cityInfoListData = gson.fromJson(response, CityInfoListData.class);
                         if (cityInfoListData.getStatus().equals("ok")) {
-                            cityInfoDatas = cityInfoListData.getCity_info();
+                            List<CityInfoData> cityInfoDatas = cityInfoListData.getCity_info();
+
+                            mCityInfoDatas.clear();
+                            mCityInfoDatas.addAll(cityInfoDatas);
                             mAdapter.notifyDataSetChanged();
                         }
                     }
@@ -84,15 +93,28 @@ public class CityListActivity extends BaseActivity {
         ButterKnife.unbind(this);
     }
 
-    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.CityListViewHolder> {
+    public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.CityListViewHolder> {
         private Context context;
         private LayoutInflater layoutInflater;
         private List<CityInfoData> cityInfoDatas;
+        private OnItemClickListener clickListener;
 
         public RecyclerViewAdapter(Context context, List<CityInfoData> cityInfoListData) {
             this.context = context;
             this.layoutInflater = LayoutInflater.from(context);
             this.cityInfoDatas = cityInfoListData;
+        }
+
+        public static interface OnItemClickListener {
+            void onClick(View view, int postion);
+        }
+
+        public OnItemClickListener getClickListener() {
+            return clickListener;
+        }
+
+        public void setClickListener(OnItemClickListener clickListener) {
+            this.clickListener = clickListener;
         }
 
         @Override
@@ -111,20 +133,21 @@ public class CityListActivity extends BaseActivity {
             return cityInfoDatas == null ? 0 : cityInfoDatas.size();
         }
 
-        public class CityListViewHolder extends RecyclerView.ViewHolder {
+        public class CityListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             @Bind(R.id.citylist_name_tv)
             TextView mCityNametv;
 
             public CityListViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
+                mCityNametv.setOnClickListener(this);
+            }
 
-                mCityNametv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        ToastUtil.showToast(context, mCityNametv.getText().toString());
-                    }
-                });
+            @Override
+            public void onClick(View view) {
+                if (clickListener != null) {
+                    clickListener.onClick(itemView, getAdapterPosition());
+                }
             }
         }
     }
